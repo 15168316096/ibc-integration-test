@@ -1,40 +1,52 @@
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const path = require('path');
 
 describe("deploy ibc solidity contract on axon", () => {
-    const directory = path.join(__dirname, '../../');
-    console.log(`dir:${directory}`)
+    const shellScriptPath = path.join(__dirname, '../../', 'deployment.sh');
+
+    beforeAll(async () => {
+        const command = 'chmod +x deployment.sh';
+        try {const result = execSync(`${command}`, { encoding: 'utf-8', stdio: 'inherit' });
+        if (result !== null) {
+            console.log(result.trim());
+        }
+        } catch (error) {
+            console.error('Error executing shell script:', error.message);
+        }
+    }, 1000000);
+
+
     test('start axon dev node', async () => {
-        const command = 'make axon';
-        try {
-            const { stdout } = await executeShellCommand(command, { cwd: directory });
-            console.log('Deploy success:', stdout);
+        const command = 'start_axon_dev_node';
+        try {const result = execSync(`${shellScriptPath} ${command}`, { encoding: 'utf-8', stdio: 'inherit' });
+        if (result !== null) {
+            console.log(result.trim());
+        }
         } catch (error) {
-            console.error(`Deploy failed: ${error.message}`);
-            throw error;
+            console.error('Error executing shell script:', error.message);
         }
     }, 1000000);
 
-    test.skip('deploy ibc-solidity-contract', async () => {
-        const command = 'make ibc-solidity-contract';
-        try {
-            const { stdout } = await executeShellCommand(command, { cwd: directory });
-            console.log('Deploy success:', stdout);
+
+    test('deploy_ibc_solidity_contractt', async () => {
+        const command = 'deploy_ibc_solidity_contract';
+        try {const result = execSync(`${shellScriptPath} ${command}`, { encoding: 'utf-8', stdio: 'inherit' });
+        if (result !== null) {
+            console.log(result.trim());
+        }
         } catch (error) {
-            console.error(`Deploy failed: ${error.message}`);
-            throw error;
+            console.error('Error executing shell script:', error.message);
         }
     }, 1000000);
+
+    //  afterAll(async () => {
+    //      const command = 'clean';
+    //      try {const result = execSync(`${shellScriptPath} ${command}`, { encoding: 'utf-8', stdio: 'inherit' });
+    //      if (result !== null) {
+    //      console.log(result.trim());
+    // }
+    //      } catch (error) {
+    //          console.error('Error executing shell script:', error.message);
+    //      }
+    //  }, 1000000);
 });
-
-function executeShellCommand(command, options) {
-    return new Promise((resolve, reject) => {
-        exec(command, options, (error, stdout, stderr) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ stdout, stderr });
-            }
-        });
-    });
-}
