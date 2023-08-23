@@ -8,19 +8,35 @@ start_axon_dev_node() {
     # Wait for a short period for the node to start and sync
     sleep 10
     
-    # Check Ethereum block height using curl
-    block_height=$(curl -s -X POST \
-        -H "Content-Type: application/json" \
-        --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
-        "http://localhost:8000" | jq -r ".result")
-
-    if [ "$block_height" -gt 0 ]; then
-        echo "Axon Dev Node started successfully"
-    else
+    # Initialize variables
+    max_retries=30  # Maximum number of retries
+    current_retry=1
+    block_height=0
+    
+    # Loop to wait for node to start
+    while [ "$current_retry" -le "$max_retries" ]; do
+        # Check Ethereum block height using curl
+        block_height=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
+            "http://localhost:8000" | jq -r ".result")
+        
+        if [ "$block_height" -gt 0 ]; then
+            echo "Axon Dev Node started successfully"
+            break  # Break the loop if successful
+        else
+            echo "Retrying... (Attempt $current_retry/$max_retries)"
+            sleep 5  # Wait before the next retry
+        fi
+        
+        current_retry=$((current_retry + 1))
+    done
+    
+    # Check if the maximum number of retries was reached
+    if [ "$current_retry" -gt "$max_retries" ]; then
         echo "Axon Dev Node failed to start"
     fi
 }
-
 
 # Deploy IBC Solidity Contract to Axon Dev Node
 deploy_ibc_solidity_contract() {
