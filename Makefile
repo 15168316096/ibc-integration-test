@@ -1,6 +1,7 @@
 axon:
 	git clone -b forcerelay-test https://github.com/axonweb3/axon.git
 	cd axon
+	ls -la
 	cargo run --release -- run -c devtools/chain/config.toml -g devtools/chain/genesis_single_node.json
 
 ibc-solidity-contract:
@@ -13,3 +14,4 @@ ibc-solidity-contract:
 
 clean:
 	rm -rf axon/
+	rm -rf ibc-solidity-contract/

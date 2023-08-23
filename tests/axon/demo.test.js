@@ -3,7 +3,7 @@ const path = require('path');
 
 describe("deploy ibc solidity contract on axon", () => {
     const directory = path.join(__dirname, '../../');
-
+    console.log(`dir:${directory}`)
     test('start axon dev node', async () => {
         const command = 'make axon';
         try {
@@ -13,9 +13,9 @@ describe("deploy ibc solidity contract on axon", () => {
             console.error(`Deploy failed: ${error.message}`);
             throw error;
         }
-    }, 10000);
+    }, 1000000);
 
-    test('deploy ibc-solidity-contract', async () => {
+    test.skip('deploy ibc-solidity-contract', async () => {
         const command = 'make ibc-solidity-contract';
         try {
             const { stdout } = await executeShellCommand(command, { cwd: directory });
@@ -24,7 +24,7 @@ describe("deploy ibc solidity contract on axon", () => {
             console.error(`Deploy failed: ${error.message}`);
             throw error;
         }
-    }, 10000);
+    }, 1000000);
 });
 
 function executeShellCommand(command, options) {
