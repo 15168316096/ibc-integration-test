@@ -6,10 +6,10 @@ start_axon_dev_node() {
     cd axon && cargo run --release -- run -c devtools/chain/config.toml -g devtools/chain/genesis_single_node.json > axon.log 2>&1 &
     
     # Wait for a short period for the node to start and sync
-    sleep 10
+    sleep 5m
     
     # Initialize variables
-    max_retries=30  # Maximum number of retries
+    max_retries=50  # Maximum number of retries
     current_retry=1
     block_height=0
     
@@ -21,7 +21,7 @@ start_axon_dev_node() {
             --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
             "http://localhost:8000" | jq -r ".result")
         
-        if [ "$block_height" -gt 0 ]; then
+        if [ -n "$block_height" ] && [ "$block_height" -gt 0 ]; then
             echo "Axon Dev Node started successfully"
             break  # Break the loop if successful
         else
