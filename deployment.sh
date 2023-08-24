@@ -8,10 +8,10 @@ start_axon_dev_node() {
     ./target/debug/axon run --config devtools/chain/config.toml --chain-spec devtools/chain/specs/single_node/chain-spec.toml > axon.log 2>&1 &      
       
     # Wait for a short period for the node to start and sync
-    sleep 5m
+    sleep 1m
     
     # Initialize variables
-    max_retries=50  # Maximum number of retries
+    max_retries=10  # Maximum number of retries
     current_retry=1
     block_height=0
     
