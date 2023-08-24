@@ -37,6 +37,7 @@ jobs:
       - name: Run tests
         id: runtest
         run: |
+          npm install jest --save-dev
           npm run test
       - name: Publish reports
         if: failure()
