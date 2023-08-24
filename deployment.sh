@@ -3,8 +3,10 @@
 # Start Axon Dev Node
 start_axon_dev_node() {
     git clone -b forcerelay-test https://github.com/axonweb3/axon.git
-    cd axon && cargo run --release -- run -c devtools/chain/config.toml -g devtools/chain/genesis_single_node.json > axon.log 2>&1 &
-    
+    cd axon && cargo build
+    rm -rf ./devtools/chain/data
+    ./target/debug/axon run --config devtools/chain/config.toml --chain-spec devtools/chain/specs/single_node/chain-spec.toml > axon.log 2>&1 &      
+      
     # Wait for a short period for the node to start and sync
     sleep 5m
     
